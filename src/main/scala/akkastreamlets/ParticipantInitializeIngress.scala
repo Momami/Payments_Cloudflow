@@ -1,0 +1,5 @@
+package akkastreamlets
+
+class ParticipantInitializeIngress {
+
+}
