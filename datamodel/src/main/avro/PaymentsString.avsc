@@ -1,5 +1,5 @@
 {
-    "namespace": "akkastreamlets",
+    "namespace": "payments.ingress",
     "type": "record",
     "name": "PaymentString",
     "fields": [

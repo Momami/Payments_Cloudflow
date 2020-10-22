@@ -1,4 +1,4 @@
-package flinkstreamlets
+package payments.process
 
 class PaymentProcessingStreamlet {
 

@@ -1,4 +1,4 @@
-package akkastreamlets
+package payments.egress
 
 class PaymentLoggingEgress {
 

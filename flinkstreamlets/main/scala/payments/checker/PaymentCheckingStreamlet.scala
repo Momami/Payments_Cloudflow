@@ -1,4 +1,4 @@
-package flinkstreamlets
+package payments.checker
 
 class PaymentCheckingStreamlet {
 
