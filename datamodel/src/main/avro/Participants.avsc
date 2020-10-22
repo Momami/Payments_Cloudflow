@@ -1,0 +1,18 @@
+{
+    "namespace": "payments.ingress",
+    "type": "record",
+    "name": "ParticipantInfo",
+    "fields": [
+        {
+            "name": "participantId",
+            "type": {
+                "type": "string",
+                "logicalType": "uuid"
+            }
+        },
+        {
+            "name": "balance",
+            "type": "long"
+        }
+    ]
+}

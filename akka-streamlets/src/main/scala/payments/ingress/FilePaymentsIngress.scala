@@ -5,19 +5,18 @@ import java.nio.file.{FileSystem, FileSystems}
 
 import akka.NotUsed
 import akka.stream.alpakka.file.scaladsl.Directory
-import akka.stream.scaladsl.{FileIO, Framing, RunnableGraph, Source}
+import akka.stream.scaladsl.{FileIO, Framing, Source}
 import akka.util.ByteString
-import cloudflow.akkastream.scaladsl.RunnableGraphStreamletLogic
-import cloudflow.akkastream.{AkkaServerStreamlet, AkkaStreamletLogic}
+import cloudflow.akkastream._
 import cloudflow.streamlets.avro.AvroOutlet
-import cloudflow.streamlets.{ConfigParameter, IntegerConfigParameter, StreamletShape, StringConfigParameter}
-import org.apache.kafka.clients.producer.RoundRobinPartitioner
+import cloudflow.streamlets._
 
 import scala.collection.immutable
 import scala.util.matching.Regex
 
-class FilePaymentsIngress extends AkkaServerStreamlet{
-  val out: AvroOutlet[Any] = AvroOutlet[PaymentsString]("out").withPartitioner(RoundRobinPartitioner)
+class FilePaymentsIngress extends AkkaServerStreamlet {
+  val out: AvroOutlet[PaymentString] = AvroOutlet[PaymentString]("out")
+
   def shape: StreamletShape = StreamletShape.withOutlets(out)
 
   val directoryConf: StringConfigParameter = StringConfigParameter("catalog")
@@ -28,20 +27,22 @@ class FilePaymentsIngress extends AkkaServerStreamlet{
   override def configParameters: immutable.IndexedSeq[ConfigParameter] =
     Vector(directoryConf, maskConf, delimiterConf, maximumFrameLengthConf)
 
-  override protected def createLogic(): AkkaStreamletLogic = new RunnableGraphStreamletLogic() {
+  override protected def createLogic(): AkkaStreamletLogic = new AkkaStreamletLogic() {
     val directory: String = directoryConf.value
     val mask: Regex = maskConf.value.r
     val delimiter: String = delimiterConf.value
     val maxFrameLength: Int = maximumFrameLengthConf.value
 
     val fs: FileSystem = FileSystems.getDefault
-    val readPayments: Source[String, NotUsed] =
-      Directory.ls(fs.getPath(directory))
-        .filter(path => mask.pattern.matcher(path.getFileName.toString).matches())
-        .flatMapConcat(FileIO.fromPath(_))
-        .via(Framing.delimiter(ByteString(delimiter), maximumFrameLength = maxFrameLength))
-        .map(msg => msg.utf8String)
-    override def runnableGraph(): RunnableGraph[_] =
-       readPayments.to(plainSink(out))
+
+    override def run(): Unit = {
+      val readPayments: Source[PaymentString, NotUsed] =
+        Directory.ls(fs.getPath(directory))
+          .filter(path => mask.pattern.matcher(path.getFileName.toString).matches())
+          .flatMapConcat(FileIO.fromPath(_))
+          .via(Framing.delimiter(ByteString(delimiter), maximumFrameLength = maxFrameLength))
+          .map(msg => PaymentString(msg.utf8String))
+      readPayments.to(plainSink(out)).run()
+    }
   }
 }
