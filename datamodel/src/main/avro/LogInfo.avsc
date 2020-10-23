@@ -1,0 +1,16 @@
+{
+    "namespace": "payments.egress",
+    "type": "record",
+    "name": "LogInfo",
+    "fields": [
+        {
+            "name": "message",
+            "type": "string"
+        },
+        {
+            "name": "typeLog",
+            "type": "string"
+
+        }
+    ]
+}

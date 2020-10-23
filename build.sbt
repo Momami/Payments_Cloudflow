@@ -50,12 +50,6 @@ lazy val myPaymentsPipeline = appModule("my-payments-pipeline")
 
 lazy val datamodel = (project in file("./datamodel"))
   .enablePlugins(CloudflowLibraryPlugin)
-  .settings(
-    schemaCodeGenerator := SchemaCodeGenerator.Scala,
-    schemaPaths := Map(
-      SchemaFormat.Avro -> "src/main/avro"
-    )
-  )
 
 lazy val paymentData = (project in file("."))
   .enablePlugins(CloudflowApplicationPlugin, CloudflowAkkaPlugin)

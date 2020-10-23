@@ -7,6 +7,7 @@ import cloudflow.streamlets._
 import cloudflow.streamlets.avro._
 import cloudflow.akkastream.util.scaladsl.HttpServerLogic
 
+import JsonParticipant._
 
 class ParticipantInitializeIngress extends AkkaServerStreamlet{
   val out: AvroOutlet[ParticipantInfo] = AvroOutlet[ParticipantInfo]("out")
