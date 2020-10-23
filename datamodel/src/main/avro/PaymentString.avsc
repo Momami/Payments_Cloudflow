@@ -1,5 +1,5 @@
 {
-    "namespace": "payments.ingress",
+    "namespace": "payments.datamodel",
     "type": "record",
     "name": "PaymentString",
     "fields": [

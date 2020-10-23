@@ -6,6 +6,7 @@ import cloudflow.akkastream._
 import cloudflow.streamlets._
 import cloudflow.streamlets.avro._
 import cloudflow.akkastream.util.scaladsl.HttpServerLogic
+import payments.datamodel._
 
 import JsonParticipant._
 

@@ -13,6 +13,7 @@ import cloudflow.streamlets._
 
 import scala.collection.immutable
 import scala.util.matching.Regex
+import payments.datamodel._
 
 class FilePaymentsIngress extends AkkaServerStreamlet {
   val out: AvroOutlet[PaymentString] = AvroOutlet[PaymentString]("out")

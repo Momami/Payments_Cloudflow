@@ -1,14 +1,11 @@
 {
-    "namespace": "payments.ingress",
+    "namespace": "payments.datamodel",
     "type": "record",
     "name": "ParticipantInfo",
     "fields": [
         {
             "name": "participantId",
-            "type": {
-                "type": "string",
-                "logicalType": "uuid"
-            }
+            "type": "string"
         },
         {
             "name": "balance",

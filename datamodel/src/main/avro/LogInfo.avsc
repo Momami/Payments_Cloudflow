@@ -1,5 +1,5 @@
 {
-    "namespace": "payments.egress",
+    "namespace": "payments.datamodel",
     "type": "record",
     "name": "LogInfo",
     "fields": [
