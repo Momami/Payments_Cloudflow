@@ -12,6 +12,7 @@ lazy val root =
     .withId("root")
     .settings(commonSettings)
     .aggregate(
+      myPaymentsPipeline,
       datamodel,
       akkaStreamlets
     )
@@ -38,13 +39,21 @@ lazy val akkaStreamlets = appModule("akka-streamlets")
   )
   .dependsOn(datamodel)
 
+lazy val flinkStreamlets = appModule("flink-streamlets")
+  .enablePlugins(CloudflowApplicationPlugin, CloudflowFlinkPlugin)
+  .settings(commonSettings)
+  .dependsOn(datamodel)
+
+lazy val myPaymentsPipeline = appModule("my-payments-pipeline")
+  .enablePlugins(CloudflowApplicationPlugin)
+  .settings(commonSettings)
+
 lazy val datamodel = (project in file("./datamodel"))
   .enablePlugins(CloudflowLibraryPlugin)
   .settings(
     schemaCodeGenerator := SchemaCodeGenerator.Scala,
     schemaPaths := Map(
-      SchemaFormat.Avro -> "src/main/avro",
-      SchemaFormat.Proto -> "src/main/resources/protobuf"
+      SchemaFormat.Avro -> "src/main/avro"
     )
   )
 
@@ -55,11 +64,6 @@ lazy val paymentData = (project in file("."))
     name := "PaymentsCloudflow",
     scalaVersion := "2.12.11",
     version := "0.1",
-
-    libraryDependencies ++= Seq(
-      "com.lightbend.akka"     %% "akka-stream-alpakka-file"  % "1.1.2",
-      "ch.qos.logback"         %  "logback-classic"           % "1.2.3"
-    )
   )
 
 lazy val commonSettings = Seq(
