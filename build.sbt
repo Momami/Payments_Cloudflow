@@ -5,7 +5,7 @@ lazy val root =
   Project(id = "root", base = file("."))
     .enablePlugins(ScalafmtPlugin)
     .settings(
-      name := "root",
+      name := "PaymentsCloudflow",
       scalafmtOnCompile := true,
       skip in publish := true,
     )
@@ -14,7 +14,8 @@ lazy val root =
     .aggregate(
       myPaymentsPipeline,
       datamodel,
-      akkaStreamlets
+      akkaStreamlets,
+      flinkStreamlets
     )
 
 def appModule(moduleID: String): Project = {
@@ -27,43 +28,36 @@ def appModule(moduleID: String): Project = {
 }
 
 lazy val akkaStreamlets = appModule("akka-streamlets")
-  .enablePlugins(CloudflowApplicationPlugin, CloudflowAkkaPlugin)
+  .enablePlugins(CloudflowAkkaPlugin)
   .settings(
     commonSettings,
     libraryDependencies ++= Seq(
       "com.lightbend.akka"        %% "akka-stream-alpakka-file"  % "1.1.2",
       "com.typesafe.akka"         %% "akka-http-spray-json"   % "10.1.12",
       "ch.qos.logback"            %  "logback-classic"        % "1.2.3",
+      "com.typesafe.akka"         %% "akka-http-testkit"         % "10.1.12" % "test",
       "org.scalatest"             %% "scalatest"              % "3.0.8"    % "test"
     )
   )
   .dependsOn(datamodel)
 
 lazy val flinkStreamlets = appModule("flink-streamlets")
-  .enablePlugins(CloudflowApplicationPlugin, CloudflowFlinkPlugin)
+  .enablePlugins(CloudflowFlinkPlugin)
   .settings(commonSettings)
   .dependsOn(datamodel)
 
 lazy val myPaymentsPipeline = appModule("my-payments-pipeline")
   .enablePlugins(CloudflowApplicationPlugin)
   .settings(commonSettings)
+  .dependsOn(datamodel)
 
 lazy val datamodel = (project in file("./datamodel"))
   .enablePlugins(CloudflowLibraryPlugin)
 
-lazy val paymentData = (project in file("."))
-  .enablePlugins(CloudflowApplicationPlugin, CloudflowAkkaPlugin)
-  .settings(
-    runLocalConfigFile := Some("src/main/resources/local.conf"),
-    name := "PaymentsCloudflow",
-    scalaVersion := "2.12.11",
-    version := "0.1",
-  )
-
 lazy val commonSettings = Seq(
   organization := "com.lightbend.cloudflow",
   headerLicense := Some(HeaderLicense.ALv2("(C) 2016-2020", "Lightbend Inc. <https://www.lightbend.com>")),
-  scalaVersion := "2.12.11",
+  scalaVersion := "2.12.10",
   javacOptions += "-Xlint:deprecation",
   scalacOptions ++= Seq(
     "-encoding", "UTF-8",
@@ -79,8 +73,6 @@ lazy val commonSettings = Seq(
   ),
 
   scalacOptions in (Compile, console) --= Seq("-Ywarn-unused", "-Ywarn-unused-import"),
-  scalacOptions in (Test, console) := (scalacOptions in (Compile, console)).value
-
+  scalacOptions in (Test, console) := (scalacOptions in (Compile, console)).value,
+  runLocalConfigFile := Some("src/main/resources/local.conf")
 )
-
-dynverSeparator in ThisBuild := "-"

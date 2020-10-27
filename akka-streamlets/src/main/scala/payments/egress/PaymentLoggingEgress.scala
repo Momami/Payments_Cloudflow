@@ -1,6 +1,7 @@
 package payments.egress
 
 
+import akka.kafka.ConsumerMessage
 import akka.stream.scaladsl.RunnableGraph
 import cloudflow.akkastream.scaladsl.{FlowWithCommittableContext, RunnableGraphStreamletLogic}
 import cloudflow.akkastream._
@@ -20,7 +21,7 @@ class PaymentLoggingEgress extends AkkaServerStreamlet {
       case _ => system.log.error("Unknown operation.")
     }
 
-    def flow =
+    def flow: FlowWithCommittableContext[LogInfo, LogInfo]#Repr[LogInfo, ConsumerMessage.Committable] =
       FlowWithCommittableContext[LogInfo]
         .map { logInfo: LogInfo ⇒
           log(logInfo)

@@ -13,10 +13,9 @@ import scala.collection.immutable
 import scala.util.matching.Regex
 
 class PaymentCheckingStreamlet extends FlinkStreamlet {
-  @transient val in                    = AvroInlet[PaymentString]("in")
-  @transient val out                   = AvroOutlet[PaymentObject]("out")
+  @transient val in: AvroInlet[PaymentString] = AvroInlet[PaymentString]("in")
+  @transient val out: AvroOutlet[PaymentObject] = AvroOutlet[PaymentObject]("out")
   @transient val shape: StreamletShape = StreamletShape(in, out)
-
   val maskConf: StringConfigParameter = StringConfigParameter("mask")
 
   override def configParameters: immutable.IndexedSeq[ConfigParameter] = Vector(maskConf)
@@ -24,7 +23,7 @@ class PaymentCheckingStreamlet extends FlinkStreamlet {
   override protected def createLogic(): FlinkStreamletLogic = new FlinkStreamletLogic() {
     override def buildExecutionGraph(): Unit = {
       val maskForFilter: Regex = maskConf.value.r
-
+      println("fox")
       val objectStream: DataStream[PaymentObject] =
         readStream(in)
           .flatMap {
