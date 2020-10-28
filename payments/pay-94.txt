@@ -1,3 +1,2 @@
-Kleo -> Gerda: 600
-tyu >- asd: 590
-Simon -> Cubic: 39000
+Kleo -> Gerda: 607
+Simon -> Cubic: 3900
