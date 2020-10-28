@@ -4,7 +4,7 @@ package payments.ingress
 import java.nio.file.{FileSystem, FileSystems}
 
 import akka.NotUsed
-import akka.stream.alpakka.file.scaladsl.Directory
+import akka.stream.alpakka.file.scaladsl.{Directory, DirectoryChangesSource}
 import akka.stream.scaladsl.{FileIO, Framing, Source}
 import akka.util.ByteString
 import cloudflow.akkastream._
@@ -14,6 +14,8 @@ import cloudflow.streamlets._
 import scala.collection.immutable
 import scala.util.matching.Regex
 import payments.datamodel._
+
+import scala.concurrent.duration.DurationInt
 
 class FilePaymentsIngress extends AkkaServerStreamlet {
   val out: AvroOutlet[PaymentString] = AvroOutlet[PaymentString]("out")
@@ -37,13 +39,20 @@ class FilePaymentsIngress extends AkkaServerStreamlet {
     val fs: FileSystem = FileSystems.getDefault
 
     override def run(): Unit = {
-      val readPayments: Source[PaymentString, NotUsed] =
-        Directory.ls(fs.getPath(directory))
-          .filter(path => mask.pattern.matcher(path.getFileName.toString).matches())
-          .flatMapConcat(FileIO.fromPath(_))
-          .via(Framing.delimiter(ByteString(delimiter), maximumFrameLength = maxFrameLength))
-          .map(msg => PaymentString(msg.utf8String))
-      readPayments.to(plainSink(out)).run()
+      val read = DirectoryChangesSource(fs.getPath(directory), pollInterval = 1.second, maxBufferSize = 1000)
+        .map(_._1)
+        .filter(path => mask.pattern.matcher(path.getFileName.toString).matches())
+        .flatMapConcat(FileIO.fromPath(_))
+        .via(Framing.delimiter(ByteString(delimiter), maximumFrameLength = maxFrameLength))
+        .map(msg => PaymentString(msg.utf8String))
+      read.to(plainSink(out)).run()
+//      val readPayments: Source[PaymentString, NotUsed] =
+//        Directory.ls(fs.getPath(directory))
+//          .filter(path => mask.pattern.matcher(path.getFileName.toString).matches())
+//          .flatMapConcat(FileIO.fromPath(_))
+//          .via(Framing.delimiter(ByteString(delimiter), maximumFrameLength = maxFrameLength))
+//          .map(msg => PaymentString(msg.utf8String))
+//      readPayments.to(plainSink(out)).run()
     }
   }
 }

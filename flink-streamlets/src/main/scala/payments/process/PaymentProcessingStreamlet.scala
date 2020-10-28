@@ -26,7 +26,7 @@ class PaymentProcessingStreamlet extends FlinkStreamlet {
 
       val payments: DataStream[PaymentObject] =
         readStream(inPayment)
-          .keyBy(_.senderId)
+          .keyBy(_.receiverId)
 
       val logInfo: DataStream[LogInfo] = participants
         .connect(payments)
@@ -60,8 +60,11 @@ class PaymentProcessingStreamlet extends FlinkStreamlet {
       value match {
         case PaymentObject(senderId, _, _) if !participantState.contains(senderId) =>
           out.collect(LogInfo("Sender does not exist.", "WARN"))
+          out.collect(LogInfo(s"$senderId", "WARN"))
         case PaymentObject(_, receiverId, _) if !participantState.contains(receiverId) =>
           out.collect(LogInfo("Receiver does not exist.", "WARN"))
+          out.collect(LogInfo(s"$receiverId", "WARN"))
+          out.collect(LogInfo(s"${participantState.keys()}", "WARN"))
         case PaymentObject(senderId, _, sum) if sum > participantState.get(senderId).balance =>
           out.collect(LogInfo("The sender has insufficient funds.", "WARN"))
         case PaymentObject(senderId, receiverId, sum) =>
