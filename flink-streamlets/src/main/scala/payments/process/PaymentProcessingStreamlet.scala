@@ -4,7 +4,7 @@ import cloudflow.flink._
 import cloudflow.streamlets.StreamletShape
 import cloudflow.streamlets.avro._
 import org.apache.flink.api.common.state.{MapState, MapStateDescriptor}
-import org.apache.flink.streaming.api.functions.co.{CoProcessFunction, KeyedCoProcessFunction}
+import org.apache.flink.streaming.api.functions.co.KeyedCoProcessFunction
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.util.Collector
 import payments.datamodel._
@@ -62,11 +62,11 @@ class PaymentProcessingStreamlet extends FlinkStreamlet {
     ): Unit = {
       value match {
         case PaymentObject(senderId, _, _) if !participantState.contains(senderId) =>
-          out.collect(LogInfo("Sender does not exist.", "WARN"))
+          out.collect(LogInfo(s"Sender $senderId does not exist.", "WARN"))
         case PaymentObject(_, receiverId, _) if !participantState.contains(receiverId) =>
-          out.collect(LogInfo("Receiver does not exist.", "WARN"))
+          out.collect(LogInfo(s"Receiver $receiverId does not exist.", "WARN"))
         case PaymentObject(senderId, _, sum) if sum > participantState.get(senderId).balance =>
-          out.collect(LogInfo("The sender has insufficient funds.", "WARN"))
+          out.collect(LogInfo(s"The sender $senderId has insufficient funds: $sum.", "WARN"))
         case PaymentObject(senderId, receiverId, sum) =>
           val newSender = participantState.get(senderId)
           newSender.balance -= sum
