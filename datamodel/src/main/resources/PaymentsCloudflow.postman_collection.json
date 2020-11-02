@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"participantId\": \"u789\",\r\n    \"balance\": 20000\r\n}",
+					"raw": "{\r\n    \"participantId\": \"u789\",\r\n    \"balance\": 20000,\r\n    \"currency\": \"RUB\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -37,7 +37,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"participantId\": \"Cubic\",\r\n    \"balance\": 12000\r\n}",
+					"raw": "{\r\n    \"participantId\": \"Cubic\",\r\n    \"balance\": 12000,\r\n    \"currency\": \"USD\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -62,7 +62,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"participantId\": \"Kotik\",\r\n    \"balance\": 500\r\n}",
+					"raw": "{\r\n    \"participantId\": \"Kotik\",\r\n    \"balance\": 500,\r\n    \"currency\": \"USD\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -87,7 +87,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"participantId\": \"Pes\",\r\n    \"balance\": 1050\r\n}",
+					"raw": "{\r\n    \"participantId\": \"Pes\",\r\n    \"balance\": 1050,\r\n    \"currency\": \"USD\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -112,7 +112,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"participantId\": \"Kleo\",\r\n    \"balance\": 13000\r\n}",
+					"raw": "{\r\n    \"participantId\": \"Kleo\",\r\n    \"balance\": 13000,\r\n    \"currency\": \"RUB\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -137,7 +137,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"participantId\": \"Gerda\",\r\n    \"balance\": 14202\r\n}",
+					"raw": "{\r\n    \"participantId\": \"Gerda\",\r\n    \"balance\": 14202,\r\n    \"currency\": \"EUR\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

@@ -9,23 +9,23 @@ import cloudflow.streamlets._
 import cloudflow.streamlets.avro._
 import payments.datamodel._
 
-class PaymentLoggingEgress extends AkkaServerStreamlet {
-  val in: AvroInlet[LogInfo] = AvroInlet[LogInfo]("in")
+class PaymentLoggingEgress extends AkkaStreamlet {
+  val in: AvroInlet[LogMessage] = AvroInlet[LogMessage]("in")
   override def shape(): StreamletShape = StreamletShape.withInlets(in)
 
   override protected def createLogic(): AkkaStreamletLogic = new RunnableGraphStreamletLogic() {
 
-    def log(logInfo: LogInfo): Unit = logInfo match {
-      case LogInfo(message, "INFO") => system.log.info(message)
-      case LogInfo(message, "WARN") => system.log.warning(message)
+    def log(logMessage: LogMessage): Unit = logMessage match {
+      case LogMessage(message, "INFO") => system.log.info(message)
+      case LogMessage(message, "WARN") => system.log.warning(message)
       case _ => system.log.error("Unknown operation.")
     }
 
-    def flow: FlowWithCommittableContext[LogInfo, LogInfo]#Repr[LogInfo, ConsumerMessage.Committable] =
-      FlowWithCommittableContext[LogInfo]
-        .map { logInfo: LogInfo ⇒
-          log(logInfo)
-          logInfo
+    def flow: FlowWithCommittableContext[LogMessage, LogMessage]#Repr[LogMessage, ConsumerMessage.Committable] =
+      FlowWithCommittableContext[LogMessage]
+        .map { logMessage: LogMessage ⇒
+          log(logMessage)
+          logMessage
         }
 
     def runnableGraph: RunnableGraph[_] =

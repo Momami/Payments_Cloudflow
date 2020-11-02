@@ -10,6 +10,10 @@
         {
             "name": "balance",
             "type": "long"
+        },
+        {
+            "name": "currency",
+            "type": "string"
         }
     ]
 }

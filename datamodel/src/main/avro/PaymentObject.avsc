@@ -14,6 +14,10 @@
         {
             "name": "sum",
             "type": "long"
+        },
+        {
+            "name": "currency",
+            "type": "string"
         }
     ]
 }
