@@ -3,7 +3,7 @@ package payments.checker
 import cloudflow.flink.{ FlinkStreamlet, FlinkStreamletLogic }
 import cloudflow.streamlets.{ ConfigParameter, StreamletShape, StringConfigParameter }
 import cloudflow.streamlets.avro.{ AvroInlet, AvroOutlet }
-import org.apache.flink.streaming.api.scala.{ createTypeInformation, DataStream, OutputTag }
+import org.apache.flink.streaming.api.scala.{ createTypeInformation, OutputTag }
 import payments.datamodel._
 
 import scala.collection.immutable
