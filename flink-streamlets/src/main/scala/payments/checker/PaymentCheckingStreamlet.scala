@@ -20,10 +20,9 @@ class PaymentCheckingStreamlet extends FlinkStreamlet {
 
   override protected def createLogic(): FlinkStreamletLogic = new FlinkStreamletLogic() {
     override def buildExecutionGraph(): Unit = {
-      val maskForFilter: Regex = maskConf.value.r
-      val outputLogger         = OutputTag[LogMessage](outLogger.name)
-      val objectStream: DataStream[PaymentObject] =
-        readStream(in).process(new MaskCheckingFunction(maskForFilter, outputLogger))
+      val maskForFilter = maskConf.value.r
+      val outputLogger  = OutputTag[LogMessage](outLogger.name)
+      val objectStream  = readStream(in).process(new MaskCheckingFunction(maskForFilter, outputLogger))
 
       writeStream(out, objectStream)
       writeStream(outLogger, objectStream.getSideOutput(outputLogger))

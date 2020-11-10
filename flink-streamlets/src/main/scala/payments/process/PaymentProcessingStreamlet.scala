@@ -9,7 +9,7 @@ import payments.datamodel._
 class PaymentProcessingStreamlet extends FlinkStreamlet {
   @transient val inParticipant: AvroInlet[ParticipantInfo] = AvroInlet[ParticipantInfo]("in-participant")
   @transient val inPayment: AvroInlet[PaymentObject]       = AvroInlet[PaymentObject]("in-payment")
-  @transient val outLogger: AvroOutlet[LogMessage]            = AvroOutlet[LogMessage]("out")
+  @transient val outLogger: AvroOutlet[LogMessage]         = AvroOutlet[LogMessage]("out")
   @transient def shape: StreamletShape =
     StreamletShape
       .withInlets(inParticipant, inPayment)
@@ -17,15 +17,15 @@ class PaymentProcessingStreamlet extends FlinkStreamlet {
 
   override def createLogic(): FlinkStreamletLogic = new FlinkStreamletLogic() {
     override def buildExecutionGraph(): Unit = {
-      val participants: DataStream[ParticipantInfo] =
+      val participants =
         readStream(inParticipant)
           .keyBy(_.currency)
 
-      val payments: DataStream[PaymentObject] =
+      val payments =
         readStream(inPayment)
           .keyBy(_.currency)
 
-      val LogMessage: DataStream[LogMessage] = participants
+      val LogMessage = participants
         .connect(payments)
         .process(new PaymentProcessFunction)
 
