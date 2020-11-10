@@ -7,7 +7,6 @@ import org.apache.flink.streaming.api.scala.{ createTypeInformation, DataStream,
 import payments.datamodel._
 
 import scala.collection.immutable
-import scala.util.matching.Regex
 
 class PaymentCheckingStreamlet extends FlinkStreamlet {
   @transient val in: AvroInlet[PaymentString]      = AvroInlet[PaymentString]("in")
