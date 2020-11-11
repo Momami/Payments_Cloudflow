@@ -1,0 +1,23 @@
+{
+    "namespace": "payments.datamodel",
+    "type": "record",
+    "name": "PaymentObject",
+    "fields": [
+        {
+            "name": "senderId",
+            "type": "string"
+        },
+        {
+            "name": "receiverId",
+            "type": "string"
+        },
+        {
+            "name": "sum",
+            "type": "long"
+        },
+        {
+            "name": "currency",
+            "type": "string"
+        }
+    ]
+}
